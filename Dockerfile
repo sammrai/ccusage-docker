@@ -1,23 +1,19 @@
-# マルチステージビルド: ビルドステージ
-FROM node:18-alpine AS builder
+FROM node:18-slim AS builder
 
 WORKDIR /app
 
-# ccusageをグローバルインストール
 RUN npm install -g ccusage@latest
 
-# 実行ステージ: 最小サイズのAlpineイメージ
-FROM node:18-alpine AS runner
 
-# 必要最小限のパッケージのみインストール
-RUN apk add --no-cache bash
+FROM node:18-slim
 
-# ビルドステージからccusageをコピー
-COPY --from=builder /usr/local/lib/node_modules/ccusage /usr/local/lib/node_modules/ccusage
-COPY --from=builder /usr/local/bin/ccusage /usr/local/bin/ccusage
+COPY --from=builder /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
 
-# 作業ディレクトリ設定
-WORKDIR /app
+ENV PATH="/usr/local/bin:$PATH"
 
-# ccusage実行
+WORKDIR /usr/local/lib/node_modules/ccusage
+
+
+COPY --from=builder /usr/local/ /usr/local/
+
 CMD ["ccusage"]
