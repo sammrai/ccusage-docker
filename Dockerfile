@@ -1,19 +1,11 @@
-FROM node:18-slim AS builder
+FROM node:18-slim
 
 WORKDIR /app
 
-RUN npm install -g ccusage@latest
-
-
-FROM node:18-slim
-
-COPY --from=builder /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
-
-ENV PATH="/usr/local/bin:$PATH"
-
-WORKDIR /usr/local/lib/node_modules/ccusage
-
-
-COPY --from=builder /usr/local/ /usr/local/
+RUN apt-get update && \
+    apt-get install -y bash && \
+    npm install -g ccusage@latest && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 CMD ["ccusage"]
