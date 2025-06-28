@@ -17,7 +17,7 @@ To use this Docker image, you need:
 
 You can run `ccusage` commands directly using the Docker image.
 
-### teractive Reporting
+### Interactive Reporting
 
 To run a token usage report interactively, use the following command to mount your configuration files and run the `ccusage` command:
 
